@@ -121,6 +121,12 @@ Claude Code 本身在 2025–2026 高速迭代，部分 API、字段名、配置
 |:--:|:--|:--|:--|
 | 🟡 Medium | §8.2 / §8.3 消息类型段 | 正文说消息流"包含五种类型"，但只列出四种（system/init、assistant、user、result），数目对不上 | 一是把"五种"改为"四种核心类型"；二是当前 `claude-agent-sdk` 的消息 union 实际有 6+ 种（除上述四种外还有 `StreamEvent`、`RateLimitEvent`），如需精确可写"四种核心消息类型，此外还有流式（StreamEvent）、限流（RateLimitEvent）等事件" |
 
+**第 9 章 · 集腋成裘（Plugins）· 补充**
+
+| 严重等级 | 位置 | 错误 | 修正 |
+|:--:|:--|:--|:--|
+| 🟡 Medium | §9.3 卸载 Plugin 命令 | 卸载命令写成 `/plugin remove <name>`（如 `/plugin remove react-workflow`） | 当前 Claude Code 正确命令是 **`/plugin uninstall <name>`**；`/plugin remove` 不是有效命令（唯一的 `rm` 简写只用于 `/plugin marketplace remove`）。全书统一改为 `/plugin uninstall` |
+
 ---
 
 如果你在书中发现其他问题，欢迎到 [Issues](https://github.com/huangjia2019/claude-code-engineering/issues) 提出。每条经核实的勘误都会更新到此表，并在新版印刷时同步修订。
