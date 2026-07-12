@@ -129,4 +129,53 @@ Claude Code 本身在 2025–2026 高速迭代，部分 API、字段名、配置
 
 ---
 
+### 第 11 次印刷待改勘误
+
+> 2026-07 英文版（Packt《The Claude Code Operating Model》）第二轮技术评审期间新发现的问题，逐条对照官方文档复核。下列条目**尚未进入任何一次中文印刷**，将在第 11 次印刷时修订。
+>
+> 说明：这一批里绝大多数不是 API 迭代，而是书稿本身的概念性错误或过强断言——尤其是第 3、4 章关于"权限"和"隔离"的部分，照着书里的理解去做安全设计会失效。
+
+**第 2 章 · 温故知新（CLAUDE.md 记忆系统）**
+
+| 严重等级 | 位置 | 错误 | 修正 |
+|:--:|:--|:--|:--|
+| 🟠 High | §2.1 CLAUDE.md 的注入方式 | 说 CLAUDE.md 的内容进入**系统提示词** | CLAUDE.md 是作为**用户消息**注入的，位置在系统提示词**之后**，并不属于系统提示词的一部分。这解释了读者常问的"为什么 Claude 有时不严格遵守 CLAUDE.md"——它的权重本来就低于系统提示词 |
+| 🟡 Medium | §2.1 图 2-1「五层记忆架构」 | 把 `.claude/rules/*.md` 讲成与企业/用户/项目/本地并列的**独立层级**，共五层 | 官方 memory 文档只定义**四个 scope**：managed policy（企业）、user、project、local。`.claude/rules/*.md` 属于**项目级内部**的组织方式，不是第五个 scope。作为教学切分可以保留，但要写明它不是官方层级 |
+| 🟡 Medium | §2.1 企业策略层的路径 | 只给出 Linux 的 `/etc/claude-code/CLAUDE.md` | 三平台补全：macOS `/Library/Application Support/ClaudeCode/CLAUDE.md`；Linux / WSL `/etc/claude-code/CLAUDE.md`；Windows `C:\Program Files\ClaudeCode\CLAUDE.md` |
+| 🟡 Medium | §2.1 「约 50 条内置指令 / 超过 150 条衰减」 | 称"根据 Anthropic 的工程实践数据"，系统提示词含约 50 条内置指令，总指令数超过 150 条后遵循质量明显衰减 | 这两个数字**找不到官方出处**，不应署名给 Anthropic。建议改为定性表述："指令越多，单条被严格遵守的概率越低"，把结论留在机制层面，不要给具体阈值 |
+
+> 补充（非勘误）：`/memory` 命令可以列出当前会话实际加载了哪些 CLAUDE.md / CLAUDE.local.md / rules 文件，排查"规则没生效"时应该先跑它。
+
+**第 3 章 · 庖丁解牛（Skills）**
+
+| 严重等级 | 位置 | 错误 | 修正 |
+|:--:|:--|:--|:--|
+| 🔴 **Critical** | §3.3.2 description 的预算机制 | 三处都错：① 说总预算是"上下文窗口的 **2%**，默认回退到 16,000 字符"；② 说这个预算由所有已安装 Skill 的 description **平分**；③ 由此推出"装 20 个 Skill，每个 description 只能分到很少字符"的规划建议 | ① 预算约为上下文窗口的 **1%**；② **单条 description 的上限是 1,536 字符**，这是硬上限，不是平分出来的；③ 超预算时**不是平分，而是淘汰**——**被调用次数最少的 Skill，其 description 先被丢弃**。主开关是设置项 `skillListingBudgetFraction`（旧的固定覆盖是环境变量 `SLASH_COMMAND_TOOL_CHAR_BUDGET`）。**结论反过来了**：要保住一个 Skill 的 description，靠的不是把它写短，而是让它真的被用到 |
+| 🟠 High | §3.2 / §3.7 `allowed-tools` 的语义 | 把 `allowed-tools` 说成"知识约束行动的安全设计"，当作限制性的权限字段来讲 | `allowed-tools` 是**授权（自动批准）清单，不做限制**——列进去的工具在执行时免确认放行，没列的工具**并不会被禁止**。真正起限制作用的是 **`disallowed-tools`** 和权限系统本身。同理，`user-invocable: false` 只是把 Skill 从 `/` 菜单里隐藏（Claude 仍可自动调用），`model` 只是单轮的模型覆盖——**这三个字段都不是安全边界**，不能拿来做安全设计 |
+
+**第 4 章 · 分而治之（子智能体）**
+
+| 严重等级 | 位置 | 错误 | 修正 |
+|:--:|:--|:--|:--|
+| 🟠 High | §4.1 委派的技术实现 | 说"Claude Code 会启动一个新的**子进程**……子进程在干净的上下文中独立工作……返回给**主进程**" | 子智能体**不是操作系统子进程**，而是通过内置的 **Agent 工具**启动的一个**新的 Claude 实例**：独立的上下文窗口、独立的消息历史，主对话只收到它的最终回复。**上下文隔离是真的，进程隔离是比喻**。建议正文统一用"子智能体/主智能体"，进程的类比保留但点明是类比 |
+| 🟠 High | §4.3 / §4.4 `permissionMode: plan` | 说 plan 是"**系统级的只读保证**""整个会话都被标记为只读""比工具白名单更进一步的全局性安全保障" | 断言过强。实际：在 auto 模式下，**子智能体继承父会话的权限模式，其 frontmatter 里的 `permissionMode` 会被忽略**。可依赖的边界是 **`tools` 白名单**。plan 应描述为对白名单的**补强**，而不是凌驾其上的系统级保证 |
+| 🟡 Medium | §4.4.5 团队型（Agent Teams） | 与其他四种模式并列，当作可直接使用的常规模式讲解 | Agent Teams 是**实验特性，默认关闭**，需要设置环境变量 `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS` 才能启用。应加一句说明，否则读者照着做会发现根本用不了 |
+
+**第 6 章 · 海纳百川（MCP）**
+
+| 严重等级 | 位置 | 错误 | 修正 |
+|:--:|:--|:--|:--|
+| 🟠 High | §6.1 AAIF 创始成员 | 写"创始成员包括 OpenAI、Google、Microsoft、Amazon Web Services、Cloudflare、Bloomberg" | AAIF 由 **Anthropic、Block、OpenAI 三家共同发起**（分别捐出 MCP、goose、AGENTS.md）。Google、Microsoft、AWS、Cloudflare、Bloomberg 是**白金会员**，不是创始成员 |
+| 🟠 High | §6.3 / §6.8.1 OAuth 版本 | 两处都写 "OAuth 2.0 认证" | MCP 授权规范要求的是 **OAuth 2.1 + PKCE**，不是 2.0 |
+| 🟡 Medium | §6.2 MCP 的设计者 | 只提 David Soria Parra | MCP 由 **David Soria Parra 与 Justin Spahr-Summers 共同创造**，应并列署名 |
+| 🟡 Medium | §6.3 远程传输的名称 | 只说"HTTP 传输"、"SSE 已废弃" | 方向正确，但规范自 2025-03-26 起的正式名称是 **Streamable HTTP**（取代原来的 HTTP+SSE）。补上这个名字，读者查官方文档时才对得上 |
+
+> 已核实**无需修改**的地方（英文评审提出但中文原文正确，记录在此以免重复返工）：
+> - §3.7 `$ARGUMENTS` 的位置参数 `$0` 是**从 0 开始**计数的，书中写法正确。
+> - §3.7 `` !`command` `` 里的反引号是**字面语法**，要照着敲，不是 Markdown 渲染残留。
+> - §1.2 Headless 的 `--allowed-tools`：kebab-case 和 camelCase（`--allowedTools`）**两种写法官方都接受**，书中写法有效。
+> - §6.1「9700 万月度 SDK 下载量」指的是 **MCP SDK**，中文原文语境正确（英文版曾误译为 Agent SDK，已在英文校样修正）。
+
+---
+
 如果你在书中发现其他问题，欢迎到 [Issues](https://github.com/huangjia2019/claude-code-engineering/issues) 提出。每条经核实的勘误都会更新到此表，并在新版印刷时同步修订。
