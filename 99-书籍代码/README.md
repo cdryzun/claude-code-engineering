@@ -170,6 +170,29 @@ Claude Code 本身在 2025–2026 高速迭代，部分 API、字段名、配置
 | 🟡 Medium | §6.2 MCP 的设计者 | 只提 David Soria Parra | MCP 由 **David Soria Parra 与 Justin Spahr-Summers 共同创造**，应并列署名 |
 | 🟡 Medium | §6.3 远程传输的名称 | 只说"HTTP 传输"、"SSE 已废弃" | 方向正确，但规范自 2025-03-26 起的正式名称是 **Streamable HTTP**（取代原来的 HTTP+SSE）。补上这个名字，读者查官方文档时才对得上 |
 
+**第 5 章 · 防微杜渐（Hooks）**
+
+> 这一章的问题最集中。Hooks 的官方参考在 2025–2026 间扩得很快，书里的几个数字和字段名都停在了旧版本上，其中"三种处理器"和"permissionDecision 三个值"会直接影响读者的设计判断。
+
+| 严重等级 | 位置 | 错误 | 修正 |
+|:--:|:--|:--|:--|
+| 🟠 High | §5.4 三种处理器类型 | 说 Hook 处理器有**三种**（command / prompt / agent），并据此建立"确定性递减"的阶梯 | 官方参考文档的处理器是**五种**：`command`、`prompt`、`agent`，外加 **`http`**（把事件 JSON POST 到你指定的 URL）和 **`mcp_tool`**（调用一个已连接的 MCP 服务器上的工具）。`/hooks` 菜单里五种都会列出。确定性阶梯对 command/prompt/agent 仍然成立，但 http 和 mcp_tool 是**集成出口**，不是阶梯上的一级——应补充说明，否则分类是不完整的 |
+| 🟠 High | §5.5 `permissionDecision` 取值 | 说"`permissionDecision` 支持三个值：`allow`、`deny`、`ask`" | 实际有**四个值**，缺了 **`defer`**（交回常规权限流程）。另外要注意：**改写参数不是第四个决策值**——它是另一套机制，把 `updatedInput` 对象放在 `hookSpecificOutput` 下面，不要写成 `permissionDecision: "modify"`（没有这个值） |
+| 🟠 High | §5.3 PostToolUse | 说 `updatedMCPToolOutput` 是 "PostToolUse 的 **MCP 专属能力**" | 字段名是 **`updatedToolOutput`**（没有 MCP 前缀），而且**不是 MCP 专属**——它可以替换**任何工具**的输出结果 |
+| 🟡 Medium | §5.2 事件生命周期 | 标题和正文都写"**17 个**关键节点"、"从 7 个扩展到 17 个" | 官方参考现在列出**三十个左右**的事件，且几乎每个版本都在增加（书里没覆盖的包括 Setup、UserPromptExpansion、PermissionDenied、PostToolBatch、MessageDisplay、TaskCreated、StopFailure、InstructionsLoaded、CwdChanged、FileChanged、PostCompact、Elicitation、ElicitationResult 等）。建议改成**版本无关的表述**（"二十多个且仍在增加"）并让读者查官方参考取实时清单——写死数字下一版就过时 |
+| 🟡 Medium | §5.5 可阻断事件列表 | 列表漏了 `PreCompact` 和 `TaskCreated` | 退出码 2 可阻断的事件里，**`PreCompact`**（退出 2 会阻止上下文压缩）和 **`TaskCreated`**（退出 2 会回滚任务创建）都应补上，另外还有 UserPromptExpansion、PostToolBatch 和两个 Elicitation 事件 |
+| 🟡 Medium | §5.4 退出码表 | 写"其他退出码 → 脚本出错。**stderr 在调试模式下可见**，但不阻止流程" | "不阻止流程"仍然正确，但"仅调试模式可见"已经过时：非阻断的非零退出现在会在 transcript 里显示一条 `<hook name> hook error` 提示 + stderr 的第一行，完整 stderr 进调试日志 |
+
+**第 7 章 · 无为而治（Headless）· 补充**
+
+| 严重等级 | 位置 | 错误 | 修正 |
+|:--:|:--|:--|:--|
+| 🟠 High | §7.2 `--max-turns` 的行为 | 说"当 `--max-turns` 耗尽时，Claude 会在当前轮输出它已经得到的结论——这个结论可能不完整但**通常有参考价值**" | 达到上限时运行会**以错误状态终止**（JSON 输出中 subtype 为 `error_max_turns`）。可能仍有部分文本返回，但**不能当成完成的答案**——脚本必须检查退出状态和 result subtype，否则会把一次被截断的运行当成成功 |
+| 🟠 High | §7.2 `--allowedTools` 模式匹配 | 只说 `Bash(git log *)` 表示"只能执行以 `git log` 开头的命令"，**没有提醒空格是有意义的** | 模式里的**空格是语义的一部分**：`Bash(git log *)`（星号前有空格）只匹配 `git log` 后跟空格的命令；写成 `Bash(git log*)`（无空格）会**连 `git log-something` 一起放行**。同理 `Bash(git diff*)` 会匹配到 `git diff-index`。在白名单里这是**安全漏洞不是笔误**，必须写这个空格 |
+| 🟡 Medium | §7.2 `--max-turns` 的语义 | 说"`--max-turns` 限制的是 Claude 与工具之间的交互轮数——**每调用一次工具算一轮**" | `--max-turns` 限制的是 **agentic turn（模型自己的轮次）**，不是工具调用次数。Claude 在**一轮里可以发起多次工具调用**，所以两者不是 1:1——用 `num_turns` 做统计时会发现它比工具调用数小 |
+| 🟡 Medium | §7.2 `--json-schema` | 说"如果不符合 schema，Claude 会**自动重试**"（读起来像会一直重试到成功） | 重试是**有限次**的。超过重试上限后仍不符合 schema，运行会返回**错误结果**而不是有效数据。读者必须写失败分支 |
+| 🟡 Medium | §7.1 第一个 `claude -p` 示例 | 直接给出 `claude -p "..."`，没说明它**不是无人值守的** | `-p` 单独使用**并不能让运行无人值守**：不带权限参数时，print 模式在 Claude 第一次要读文件或执行命令时**仍会停下来等审批**——在 CI 里就是任务挂起直到超时。第一个示例处就应该前置说明（后面的示例都加了 `--allowedTools`，正是为此） |
+
 > 已核实**无需修改**的地方（英文评审提出但中文原文正确，记录在此以免重复返工）：
 > - §3.7 `$ARGUMENTS` 的位置参数 `$0` 是**从 0 开始**计数的，书中写法正确。
 > - §3.7 `` !`command` `` 里的反引号是**字面语法**，要照着敲，不是 Markdown 渲染残留。
