@@ -41,7 +41,7 @@
 
 ---
 
-## 📘 作者英文新书 · [*Designing AI Agents*](https://hubs.la/Q04hCsH10)（Manning）
+## 📘 咖哥英文新书 · [*Designing AI Agents*](https://hubs.la/Q04hCsH10)（Manning）
 
 <div align="center">
 
@@ -54,6 +54,40 @@
 > 双轴框架（7 认知功能 × 6 执行拓扑）· 27 个 agent 设计模式 · 4 个真实领域案例。
 >
 > 配套代码：[huangjia2019/designing-ai-agents](https://github.com/huangjia2019/designing-ai-agents) · [huangjia2019/agent-design-patterns](https://github.com/huangjia2019/agent-design-patterns) · 配套论文：[arXiv:2605.13850](https://arxiv.org/abs/2605.13850)
+
+---
+
+## 📕 咖哥中文专栏 · *Agent 设计模式之美*（极客时间）· **总榜第 3 名 · 万人订阅**
+
+<div align="center">
+
+<a href="https://time.geekbang.org/"><img src="91-Pictures/geektime-agent-design-patterns.png" alt="Agent 设计模式之美 — 极客时间" width="720"/></a>
+
+</div>
+
+> **《Agent 设计模式之美》** —— 沉淀 ADPS 通用范式，做可成长的 Agent 系统。
+>
+> **英文书讲"是什么"，中文专栏讲"到底怎么落地"** —— 每一讲从源码里抠出一个可复用的 Agent 组件，配最小可运行 Python 代码，直接搬进你的项目。
+>
+> ### 你会在里面拿到
+>
+> - 🧭 **双轴框架 · 中文首发** —— 认知功能（感知 / 记忆 / 推理 / 行动 / 反思 / 协作 / 治理）× 执行拓扑（链式 / 路由 / 并行 / 循环 / 层级 / 编排）的 33 组件矩阵，一次看清 Agent 系统全景
+> - 🧩 **33 个可复用 Harness 组件** —— 从 Claude Code / Codex / OpenClaw / Hermes 等顶级 Agent 系统源码里提炼，每个配代码 + 反模式 + 何时不该用
+> - 🛠 **完整选型方法论** —— Pattern Selection Card（ASSESS → ROUTE → SELECT）+ 六步选型法（Bound → Map → Select → Pick → Assess → Build），从需求直通落地
+> - 🏗 **Argus 贯穿实战项目** —— 一个代码评审 Agent 从 50 行骨架进化到生产级，30+ 版本演进,把所有模式串成完整闭环
+> - 📖 **每讲对应曼宁书章节** —— 中文专栏 + 英文原书 = 理论 + 工程双通道，读一边等于读了两边
+>
+> ### 适合谁
+>
+> - 3-5 年工程经验、用过 LLM API、正在想"怎么把 Agent 搞进生产"的**资深工程师**
+> - **架构师 / 技术负责人 / CTO** —— 需要一套通用范式做团队 Agent 系统选型
+> - 已经看过入门课想再深一层的**进阶读者**
+>
+> **不适合**:AI 入门用户（先看入门课）· 只想拿"能跑 demo"的同学（demo 网上很多，本课讲的是**为什么这么写**）
+>
+> 配套代码：[huangjia2019/agent-design-patterns](https://github.com/huangjia2019/agent-design-patterns) · 配套论文：[arXiv:2605.13850](https://arxiv.org/abs/2605.13850) · ADPS 白皮书 / 蓝皮书：[adpsagent.com](https://adpsagent.com)
+>
+> 🔗 **搜"Agent 设计模式之美"或作者"黄佳"进入极客时间订阅** · 已 6300+ 人订阅 · 总榜第 3 名 · 43 讲每周更新 2-3 篇
 
 ---
 
