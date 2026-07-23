@@ -57,7 +57,7 @@
 
 ---
 
-## 📕 咖哥中文专栏 · [*Agent 设计模式之美*](https://time.geekbang.org/column/intro/101162601)（极客时间）· **总榜第 3 名 · 万人订阅**
+## 📕 咖哥中文专栏 · [*Agent 设计模式之美*](https://time.geekbang.org/column/intro/101162601)（极客时间）· **总榜第 3 名**
 
 <div align="center">
 
@@ -74,8 +74,6 @@
 > - 🧭 **双轴框架 · 中文首发** —— 认知功能（感知 / 记忆 / 推理 / 行动 / 反思 / 协作 / 治理）× 执行拓扑（链式 / 路由 / 并行 / 循环 / 层级 / 编排）的 33 组件矩阵，一次看清 Agent 系统全景
 > - 🧩 **33 个可复用 Harness 组件** —— 从 Claude Code / Codex / OpenClaw / Hermes 等顶级 Agent 系统源码里提炼，每个配代码 + 反模式 + 何时不该用
 > - 🛠 **完整选型方法论** —— Pattern Selection Card（ASSESS → ROUTE → SELECT）+ 六步选型法（Bound → Map → Select → Pick → Assess → Build），从需求直通落地
-> - 🏗 **Argus 贯穿实战项目** —— 一个代码评审 Agent 从 50 行骨架进化到生产级，30+ 版本演进,把所有模式串成完整闭环
-> - 📖 **每讲对应曼宁书章节** —— 中文专栏 + 英文原书 = 理论 + 工程双通道，读一边等于读了两边
 >
 > ### 适合谁
 >
@@ -86,8 +84,6 @@
 > **不适合**:AI 入门用户（先看入门课）· 只想拿"能跑 demo"的同学（demo 网上很多，本课讲的是**为什么这么写**）
 >
 > 配套代码：[huangjia2019/agent-design-patterns](https://github.com/huangjia2019/agent-design-patterns) · 配套论文：[arXiv:2605.13850](https://arxiv.org/abs/2605.13850) · ADPS 白皮书 / 蓝皮书：[adpsagent.com](https://adpsagent.com)
->
-> 🔗 [**极客时间 · 《Agent 设计模式之美》**](https://time.geekbang.org/column/intro/101162601) · 已 6300+ 人订阅 · 总榜第 3 名 · 43 讲每周更新 2-3 篇
 
 ---
 
