@@ -57,15 +57,15 @@
 
 ---
 
-## 📕 咖哥中文专栏 · *Agent 设计模式之美*（极客时间）· **总榜第 3 名 · 万人订阅**
+## 📕 咖哥中文专栏 · [*Agent 设计模式之美*](https://time.geekbang.org/column/intro/101162601)（极客时间）· **总榜第 3 名 · 万人订阅**
 
 <div align="center">
 
-<a href="https://time.geekbang.org/"><img src="91-Pictures/geektime-agent-design-patterns.png" alt="Agent 设计模式之美 — 极客时间" width="720"/></a>
+<a href="https://time.geekbang.org/column/intro/101162601"><img src="91-Pictures/geektime-agent-design-patterns.png" alt="Agent 设计模式之美 — 极客时间" width="720"/></a>
 
 </div>
 
-> **《Agent 设计模式之美》** —— 沉淀 ADPS 通用范式，做可成长的 Agent 系统。
+> [**《Agent 设计模式之美》**](https://time.geekbang.org/column/intro/101162601) —— 沉淀 ADPS 通用范式，做可成长的 Agent 系统。
 >
 > **英文书讲"是什么"，中文专栏讲"到底怎么落地"** —— 每一讲从源码里抠出一个可复用的 Agent 组件，配最小可运行 Python 代码，直接搬进你的项目。
 >
@@ -87,7 +87,7 @@
 >
 > 配套代码：[huangjia2019/agent-design-patterns](https://github.com/huangjia2019/agent-design-patterns) · 配套论文：[arXiv:2605.13850](https://arxiv.org/abs/2605.13850) · ADPS 白皮书 / 蓝皮书：[adpsagent.com](https://adpsagent.com)
 >
-> 🔗 **搜"Agent 设计模式之美"或作者"黄佳"进入极客时间订阅** · 已 6300+ 人订阅 · 总榜第 3 名 · 43 讲每周更新 2-3 篇
+> 🔗 [**极客时间 · 《Agent 设计模式之美》**](https://time.geekbang.org/column/intro/101162601) · 已 6300+ 人订阅 · 总榜第 3 名 · 43 讲每周更新 2-3 篇
 
 ---
 
